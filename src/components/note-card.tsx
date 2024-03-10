@@ -43,13 +43,33 @@ export function NoteCard({ note, onNoteDeleted }: NoteCardProps) {
             </p>
           </div>
 
-          <button
-            type='button'
-            onClick={() => onNoteDeleted(note.id) }
-            className='w-full bg-slate-800 py-4 text-center text-sm text-slate-300 outline-none font-medium group'
-          >
-            Deseja <span className='text-red-400 group-hover:underline'>apagar essa nota</span>?
-          </button>
+          <div className="grid grid-cols-5 grid-flow-col">
+            <button
+              type='button'
+              onClick={() => onNoteDeleted(note.id) }
+              className='col-span-4 bg-slate-800 py-4 text-center text-sm text-slate-300 outline-none font-medium group'
+            >
+              Deseja <span className='text-red-400 group-hover:underline'>apagar essa nota</span>?
+            </button>
+            <button
+              type='button'
+              onClick={() => {
+                if ('speechSynthesis' in window) {
+                  let message = new window.SpeechSynthesisUtterance();
+                  const voice = speechSynthesis.getVoices();
+                  message.text = note.content;
+                  message.lang = 'pt';
+                  message.voice = voice[2];
+                  window.speechSynthesis.speak(message);
+                } else {
+                  alert('Desculpe. Seu browser não suporta essa ação.');
+                }
+              }}
+              className='col-span-1 border-l-[1px] border-slate-700 col-span-1 bg-slate-800 py-4 text-center text-sm text-slate-300 outline-none font-medium group'
+            >
+              Play
+            </button>
+          </div>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
